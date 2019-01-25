@@ -1,0 +1,30 @@
+{
+  "name": "easy-chart",
+  "version": "0.0.0",
+  "description": "NFP charting utility",
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "set DEBUG=easy-chart:server & nodemon ./bin/www"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^6.2.0",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "mongoose": "^5.4.2",
+    "morgan": "~1.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "prettier": "^1.15.3",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.2"
+  }
+}
