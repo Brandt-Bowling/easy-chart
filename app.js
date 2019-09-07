@@ -25,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', apiRouter);
 app.use('/users', usersRouter);
 
+mongoose.set('useFindAndModify', false);
 mongoose
   .connect(
     process.env.DB_HOST,
@@ -39,8 +40,13 @@ mongoose
 // });
 
 // error handler
-app.use((err, req, res) => {
-  res.status(err.status || 500).send(err);
+app.use((err, req, res, _next) => {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  debug(err);
+
+  res.status(res.statusCode || 500).send(err);
 });
 
 module.exports = app;

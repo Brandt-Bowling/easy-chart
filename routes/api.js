@@ -6,22 +6,23 @@ const userStats = require('../models/dataEntry');
 const router = express.Router();
 
 /** GET home page. */
-router.get('/', (req, res) => {
-  res.send('Testing');
+router.get('/', async (req, res) => {
+  res.send(`Testing default endpoint.`);
 });
 
 /** Retrieve data from a given date. */
 router.get('/data', async (req, res, next) => {
   try {
-    const date = moment.utc(req.query.date, 'YYYY-MM-DD').startOf('day');
-    debug(`date as moment: ${date}`);
-    const datePlusOne = date.clone().add(1, 'day');
-    debug(`date plus one: ${datePlusOne}`);
+    const startDate = moment(req.query.from, 'YYYY-MM-DD').startOf('day');
+    const endDate = moment(req.query.to, 'YYYY-MM-DD').startOf('day');
+    debug(`start date as moment: ${startDate}`);
+    debug(`end date as moment: ${endDate}`);
+    const endDatePlusOne = endDate.clone().add(1, 'day');
 
     const data = await userStats.find({
       created_at: {
-        $gte: date,
-        $lt: datePlusOne,
+        $gte: startDate,
+        $lt: endDatePlusOne,
       },
     });
     debug(data);
@@ -34,18 +35,63 @@ router.get('/data', async (req, res, next) => {
   }
 });
 
+/** Retrieve data from a given user. */
+router.get('/data/users/:userId', async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const userData = await userStats.find({ 'user.firstName': userId });
+    debug(userData);
+    res.send('testing');
+  } catch (error) {
+    debug(`Caught error retrieving user data: ${error}`);
+    res.status(400);
+    next(error);
+  }
+});
+
 /** Create and save document using request body. */
-router.post('/data', (req, res, next) => {
-  userStats
-    .create(req.body)
-    .then(document => {
-      debug('Data Entered: ', req.body);
-      res.send({ data: document });
-    })
-    .catch(err => {
-      res.status(422);
-      next(err);
+router.post('/data', async (req, res, next) => {
+  try {
+    const { body } = req;
+    const postedData = await userStats.create(body);
+    debug(`Data Entered: `, body);
+    res.status(201).send({ data: postedData });
+  } catch (error) {
+    res.status(422);
+    next(error);
+  }
+});
+
+router.put('/data/:id', async (req, res, next) => {
+  try {
+    const {
+      body,
+      params: { id },
+    } = req;
+    debug(`Updating id: ${id}, with data: `, body);
+    const updatedData = await userStats.findByIdAndUpdate({ _id: id }, body, {
+      new: true,
     });
+    debug(`Updated data returned: `, updatedData);
+    res.status(200).send(updatedData);
+  } catch (error) {
+    debug(`Caught error in put route: ${error}`);
+    res.status(400);
+    next(error);
+  }
+});
+
+router.delete('/data/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedData = await userStats.findByIdAndDelete({ _id: id });
+    debug(`Deleted data: `, deletedData);
+    res.status(200).send(deletedData);
+  } catch (error) {
+    debug(`Caught error in delete route: ${error}`);
+    res.status(400);
+    next(error);
+  }
 });
 
 module.exports = router;
