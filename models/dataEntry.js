@@ -36,7 +36,7 @@ const userData = new Schema(
   },
   {
     collection: 'data',
-    timestamps: { createdAt: 'created_at' },
+    timestamps: { createdAt: 'createdAt' },
   }
 );
 
