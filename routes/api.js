@@ -1,7 +1,7 @@
 const express = require('express');
 const debug = require('debug')('easy-chart:api');
 const moment = require('moment');
-const userStats = require('../models/dataEntry');
+const DataEntries = require('../models/dataEntry');
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.get('/data', async (req, res, next) => {
     debug(`end date as moment: ${endDate}`);
     const endDatePlusOne = endDate.clone().add(1, 'day');
 
-    const data = await userStats.find({
+    const data = await DataEntries.find({
       created_at: {
         $gte: startDate,
         $lt: endDatePlusOne,
@@ -35,25 +35,11 @@ router.get('/data', async (req, res, next) => {
   }
 });
 
-/** Retrieve data from a given user. */
-router.get('/data/users/:userId', async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-    const userData = await userStats.find({ 'user.firstName': userId });
-    debug(userData);
-    res.send('testing');
-  } catch (error) {
-    debug(`Caught error retrieving user data: ${error}`);
-    res.status(400);
-    next(error);
-  }
-});
-
 /** Create and save document using request body. */
 router.post('/data', async (req, res, next) => {
   try {
     const { body } = req;
-    const postedData = await userStats.create(body);
+    const postedData = await DataEntries.create(body);
     debug(`Data Entered: `, body);
     res.status(201).send({ data: postedData });
   } catch (error) {
@@ -69,7 +55,7 @@ router.put('/data/:id', async (req, res, next) => {
       params: { id },
     } = req;
     debug(`Updating id: ${id}, with data: `, body);
-    const updatedData = await userStats.findByIdAndUpdate({ _id: id }, body, {
+    const updatedData = await DataEntries.findByIdAndUpdate({ _id: id }, body, {
       new: true,
     });
     debug(`Updated data returned: `, updatedData);
@@ -84,7 +70,7 @@ router.put('/data/:id', async (req, res, next) => {
 router.delete('/data/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const deletedData = await userStats.findByIdAndDelete({ _id: id });
+    const deletedData = await DataEntries.findByIdAndDelete({ _id: id });
     debug(`Deleted data: `, deletedData);
     res.status(200).send(deletedData);
   } catch (error) {

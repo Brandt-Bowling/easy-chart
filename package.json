@@ -4,19 +4,20 @@
   "description": "NFP charting utility",
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "set DEBUG=easy-chart:* & nodemon ./bin/www"
+    "dev": "DEBUG=easy-chart:* nodemon ./bin/www"
   },
   "license": "MIT",
   "dependencies": {
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
-    "debug": "~2.6.9",
+    "debug": "^2.6.9",
     "dotenv": "^6.2.0",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "moment": "^2.24.0",
-    "mongoose": "^5.7.5",
-    "morgan": "~1.9.0"
+    "mongoose": "^5.10.1",
+    "morgan": "~1.9.0",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
     "eslint": "^5.12.0",
@@ -24,6 +25,7 @@
     "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^3.0.1",
+    "nodemon": "^2.0.4",
     "prettier": "^1.15.3"
   }
 }

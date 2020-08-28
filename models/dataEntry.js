@@ -2,12 +2,9 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const userData = new Schema(
+const DataEntry = new Schema(
   {
-    user: {
-      firstName: String,
-      lastName: String,
-    },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     stats: {
       temp: { type: Number, required: true },
       symbol: {
@@ -40,4 +37,4 @@ const userData = new Schema(
   }
 );
 
-module.exports = mongoose.model('userData', userData);
+module.exports = mongoose.model('DataEntry', DataEntry);
