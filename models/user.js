@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const { Schema } = mongoose;
 
@@ -10,6 +11,7 @@ const User = new Schema({
     type: String,
     validate: [validator.isEmail, 'Invalid Email'],
     required: [true, 'Email is required'],
+    unique: true
   },
   data: [{ type: Schema.Types.ObjectId, ref: 'DataEntry' }],
 });
@@ -28,5 +30,6 @@ User.virtual('name').get(() => {
 });
 
 User.virtual('url').get(() => `/users/${this._id}`);
+User.plugin(uniqueValidator);
 
 module.exports = mongoose.model('User', User);
