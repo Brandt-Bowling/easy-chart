@@ -32,7 +32,7 @@ const DataEntry = new Schema(
     },
   },
   {
-    collection: 'data',
+    collection: 'dataEntries',
     timestamps: { createdAt: 'createdAt' },
   }
 );

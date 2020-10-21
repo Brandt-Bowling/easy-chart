@@ -11,18 +11,20 @@ router.get('/', async (req, res) => {
 });
 
 /** Retrieve data from a given date. */
-router.get('/data', async (req, res, next) => {
+router.get('/data/:date', async (req, res, next) => {
   try {
-    const startDate = moment(req.query.from, 'YYYY-MM-DD').startOf('day');
-    const endDate = moment(req.query.to, 'YYYY-MM-DD').startOf('day');
+    const { date = moment() } = req.params;
+    const startDate = moment(date, 'YYYY-MM-DD').startOf('day');
+    const endDate = startDate.clone().endOf('day');
+    // const endDate = moment(req.query.to, 'YYYY-MM-DD').startOf('day');
     debug(`start date as moment: ${startDate}`);
     debug(`end date as moment: ${endDate}`);
-    const endDatePlusOne = endDate.clone().add(1, 'day');
+    // const endDatePlusOne = endDate.clone().add(1, 'day');
 
     const data = await DataEntries.find({
-      created_at: {
+      createdAt: {
         $gte: startDate,
-        $lt: endDatePlusOne,
+        $lt: endDate,
       },
     });
     debug(data);

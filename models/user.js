@@ -13,7 +13,6 @@ const User = new Schema({
     required: [true, 'Email is required'],
     unique: true
   },
-  data: [{ type: Schema.Types.ObjectId, ref: 'DataEntry' }],
 });
 
 User.virtual('name').get(() => {
